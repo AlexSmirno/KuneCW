@@ -7,9 +7,67 @@
              xmlns:views="clr-namespace:Kune.Views"
              xmlns:vms="clr-namespace:Kune.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="700" d:DesignWidth="750">
 
-    <Grid>
-        <TextBlock Text="Hello there"/>
+    <Grid Height="700" Width="750">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Поиск наибольшего паросочетания через алгоритм Куна" 
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Grid.Row="0"/>
+
+        <TextBlock Text="Ввод данных"
+                   Grid.Row="1" 
+                   FontSize="20"
+                   HorizontalAlignment="Left"
+                   Margin="164,10,0,602" Width="128"/>
+        <TextBox Text="{Binding InputGraph, UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="1" 
+                 AcceptsReturn="True"
+                 Margin="45,58,339,350"/>
+
+
+        <RadioButton Content="Матрица смежности" 
+                     Grid.Row="1"
+                     FontSize="20" 
+                     Margin="63,352,465,263"
+                     IsChecked="{Binding FirstCheckbox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <RadioButton Content="Список смежности"
+                     FontSize="20"
+                     Grid.Row="1"
+                     Margin="63,399,465,213"
+                     IsChecked="{Binding SecondCheckbox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Button x:Name="input"
+                Command="{Binding }"
+                Content="Загрузить файл"
+                FontSize="20"
+                Grid.Row="1"
+                Margin="396,344,111,239"/>
+
+        <Button x:Name="outputBriefRecord"
+                Command="{Binding StartAlgorithmCommand}" CommandParameter="{Binding InputGraph}"
+                Content="Вывести ответ"
+                Grid.Row="1"
+                FontSize="20"
+                Margin="63,508,465,70"/>
+        <Button x:Name="outputFullRecord"
+                Command="{Binding }"
+                Content="Отправить файл"
+                Grid.Row="1" 
+                FontSize="20" 
+                Margin="376,553,72,54"/>
+        <TextBlock Grid.Row="1"
+                   Margin="335,420,42,101" 
+                   Text="{Binding BriefResult, UpdateSourceTrigger=PropertyChanged}"
+                   TextWrapping="Wrap"
+                   FontSize="20"/>
+
     </Grid>
 </UserControl>

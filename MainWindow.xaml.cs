@@ -24,7 +24,6 @@ namespace Kune
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

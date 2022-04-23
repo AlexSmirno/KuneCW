@@ -22,7 +22,7 @@ namespace Kune
                 DataContext = new MainViewModel()
             };
 
-            //MainWindow.Show();
+            MainWindow.Show();
 
             base.OnStartup(e);
         }

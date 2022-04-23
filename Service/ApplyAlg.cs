@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kune.Models
+namespace Kune.Service
 {
-    class Graph
+    class ApplyAlg
     {
-        public int n { get; set; }
-        public Dictionary<int, List<int>> graph { get; set; }
+
     }
 }

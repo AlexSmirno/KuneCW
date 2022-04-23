@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:Kune.Views"
         xmlns:vms="clr-namespace:Kune.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="750">
     <Grid>
         <views:MainPageView DataContext="{Binding CurrentViewModel}"/>
     </Grid>
