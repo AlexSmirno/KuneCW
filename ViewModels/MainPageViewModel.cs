@@ -1,14 +1,20 @@
 ﻿using Kune.Commands;
 using Kune.Models;
 using Kune.Service;
+using Kune.Service.ConvertData;
+using Kune.Service.FilesDialogs;
 using System;
 using System.Windows;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Kune.ViewModels
 {
     class MainPageViewModel : ViewModelBase
     {
+        IDialogService dialogService;
+        FileService fileService;
+
         private string inputGraph;
         public string InputGraph
         {
@@ -56,7 +62,7 @@ namespace Kune.ViewModels
             }
         }
 
-        private string briefResult = "Максимальное паросочетание";
+        private string briefResult;
         public string BriefResult {
             get
             {
@@ -64,11 +70,24 @@ namespace Kune.ViewModels
             }
             set
             {
-                briefResult = value;
+                briefResult = "Максимальное паросочетание " + value;
                 OnPropertyChanged(nameof(BriefResult));
             }
         }
 
+        private int[] fullResult;
+        public int[] FullResult
+        {
+            get
+            {
+                return fullResult;
+            }
+            set
+            {
+                fullResult = value;
+                OnPropertyChanged(nameof(FullResult));
+            }
+        }
         private ICommand startAlgorithmCommand;
         public ICommand StartAlgorithmCommand
         {
@@ -82,8 +101,13 @@ namespace Kune.ViewModels
 
         private async void MyCommand_Execute(object parameter)
         {
-            GetDataService getData = new GetDataService();
-            await getData.GetData(InputGraph, SelectedMode(checkboxArray));
+            IGetData getData = new GetListService();
+
+            if (FirstCheckbox) { getData = new GetMatrixService(); }
+            if (SecondCheckbox) { getData = new GetListService(); }
+
+            FullResult = await getData.ConvertData(InputGraph);
+            BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
         }
 
         private ICommand inputCommand;
@@ -99,20 +123,68 @@ namespace Kune.ViewModels
 
         private async void InputCommand_Execute(object parameter)
         {
-            GetDataService getData = new GetDataService();
+            try
+            {
+                if (dialogService.OpenFileDialog() == true)
+                {
+                    string input = await fileService.OpenAsync(dialogService.FilePath);
 
+                    IGetData getData = new GetListService();
+                    if (FirstCheckbox) { getData = new GetMatrixService(); }
+                    if (SecondCheckbox) { getData = new GetListService(); }
+                    FullResult = await getData.ConvertData(input);
+
+                    FullResult = FullResult.Where(item => item != -1).ToArray();
+                    BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
+
+                    await dialogService.ShowMessage("Файл открыт!");
+                }
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMessage(ex.Message);
+            }
+        }
+
+        private ICommand outputCommand;
+        public ICommand OutputCommand
+        {
+            get
+            {
+                if (outputCommand == null)
+                { outputCommand = new RelayCommand<object>(OutputCommand_Execute); }
+                return outputCommand;
+            }
+        }
+
+        private async void OutputCommand_Execute(object parameter)
+        {
+            try
+            {
+                if (dialogService.SaveFileDialog() == true)
+                {
+                    await fileService.Save(dialogService.FilePath, FullResult);
+
+                    await dialogService.ShowMessage("Файл сохранен!");
+                }
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMessage(ex.Message);
+            }
         }
 
         private bool[] checkboxArray = new bool[2];
 
-        public MainPageViewModel()
+        public MainPageViewModel(IDialogService dialogService, FileService fileService)
         {
-
+            this.dialogService = dialogService;
+            this.fileService = fileService;
         }
 
         public int SelectedMode(bool[] checkboxArray)
         {
-            return (Array.IndexOf(checkboxArray, true) + 1); 
+            return Array.IndexOf(checkboxArray, true) + 1; 
         }
     }
 }

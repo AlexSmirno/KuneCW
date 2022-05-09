@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kune.Service
+namespace Kune.Service.ConvertData
 {
-    class ReturnResultService
+    public interface IGetData
     {
-        public void ReturnCSV()
-        {
-
-        }
-    }
+        Task<int[]> ConvertData(string Input);
+     }
 }

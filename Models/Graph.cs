@@ -8,7 +8,8 @@ namespace Kune.Models
 {
     class Graph
     {
-        public int n { get; set; }
-        public Dictionary<int, List<int>> graph { get; set; }
+        public int size { get; set; }
+
+        public Dictionary<int, List<int>> ribsList { get; set; }
     }
 }

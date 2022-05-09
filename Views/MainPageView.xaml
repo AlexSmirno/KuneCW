@@ -6,68 +6,105 @@
              xmlns:local="clr-namespace:Kune.Views"
              xmlns:views="clr-namespace:Kune.Views"
              xmlns:vms="clr-namespace:Kune.ViewModels"
-             mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="750">
-
-    <Grid Height="700" Width="750">
+             mc:Ignorable="d" d:DesignWidth="750" Height="681">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+        <Style TargetType="TextBox" x:Key="TextBox">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+        <Style TargetType="RadioButton" x:Key="RadioBut">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style TargetType="Button" x:Key="Button">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Width="750">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Поиск наибольшего паросочетания через алгоритм Куна" 
-                   FontSize="20"
-                   HorizontalAlignment="Center"
+        <TextBlock Text="Поиск наибольшего паросочетания через алгоритм Куна"
+                   Style="{StaticResource TextBlock}"
+                   HorizontalAlignment ="Center"
                    VerticalAlignment="Center"
+                   FontSize="23"
                    Grid.Row="0"/>
-
-        <TextBlock Text="Ввод данных"
-                   Grid.Row="1" 
-                   FontSize="20"
-                   HorizontalAlignment="Left"
-                   Margin="164,10,0,602" Width="128"/>
-        <TextBox Text="{Binding InputGraph, UpdateSourceTrigger=PropertyChanged}"
-                 Grid.Row="1" 
-                 AcceptsReturn="True"
-                 Margin="45,58,339,350"/>
-
 
         <RadioButton Content="Матрица смежности" 
                      Grid.Row="1"
-                     FontSize="20" 
-                     Margin="63,352,465,263"
+                     Style="{StaticResource RadioBut}"
+                     Margin="76,15,424,15"
                      IsChecked="{Binding FirstCheckbox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <RadioButton Content="Список смежности"
-                     FontSize="20"
+                     Style="{StaticResource RadioBut}"
                      Grid.Row="1"
-                     Margin="63,399,465,213"
+                     Margin="428,15,72,15"
                      IsChecked="{Binding SecondCheckbox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <Button x:Name="input"
-                Command="{Binding }"
-                Content="Загрузить файл"
-                FontSize="20"
-                Grid.Row="1"
-                Margin="396,344,111,239"/>
+        <TextBlock Text="Ввод данных"
+                   Grid.Row="2" 
+                   Style="{StaticResource TextBlock}"
+                   Margin="84,10,523,257"/>
+        <TextBox Text="{Binding InputGraph, UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="2" 
+                 AcceptsReturn="True"
+                 Style="{StaticResource TextBox}"
+                 Margin="22,48,424,20"/>
+        <TextBlock Text="Пример ввода митрицы:"
+                   Grid.Row="2" 
+                   Style="{StaticResource TextBlock}"
+                   Margin="375,37,117,224"/>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Grid.Row="2" Margin="461,81,229,140">
+            <Run Text="0 1 0"/><LineBreak/>
+            <Run Text="0 0 0"/><LineBreak/>
+            <Run Text="0 1 0"/>
+        </TextBlock>
+        <TextBlock
+                   Grid.Row="2" 
+                   Style="{StaticResource TextBlock}"
+                   Margin="375,168,117,99"><Run Text="Пример ввода "/><Run Language="ru-ru" Text="списка"/><Run Text=":"/></TextBlock>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Grid.Row="2" Margin="461,206,229,39"><Run Language="ru-ru" Text="1 2"/><LineBreak/><Run Language="ru-ru" Text="3 2"/></TextBlock>
 
+
+        <Button x:Name="input"
+                Command="{Binding InputCommand}"
+                Content="Загрузить файл"
+                Style="{StaticResource Button}"
+                Grid.Row="3"
+                Margin="400,16,107,16"/>
         <Button x:Name="outputBriefRecord"
-                Command="{Binding StartAlgorithmCommand}" CommandParameter="{Binding InputGraph}"
+                Command="{Binding StartAlgorithmCommand}"
                 Content="Вывести ответ"
-                Grid.Row="1"
-                FontSize="20"
-                Margin="63,508,465,70"/>
+                Style="{StaticResource Button}"
+                Grid.Row="3"
+                Margin="64,16,466,16"/>
+
         <Button x:Name="outputFullRecord"
-                Command="{Binding }"
+                Command="{Binding OutputCommand}"
                 Content="Отправить файл"
-                Grid.Row="1" 
-                FontSize="20" 
-                Margin="376,553,72,54"/>
-        <TextBlock Grid.Row="1"
-                   Margin="335,420,42,101" 
+                Style="{StaticResource Button}"
+                Grid.Row="4" 
+                Margin="353,16,95,40"/>
+        <TextBlock Grid.Row="4"
+                   Margin="5,13,407,40" 
                    Text="{Binding BriefResult, UpdateSourceTrigger=PropertyChanged}"
                    TextWrapping="Wrap"
-                   FontSize="20"/>
+                   Style="{StaticResource TextBlock}"/>
 
     </Grid>
 </UserControl>

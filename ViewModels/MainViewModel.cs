@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kune.Service;
+using Kune.Service.FilesDialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +14,7 @@ namespace Kune.ViewModels
 
         public MainViewModel()
         {
-            CurrentViewModel = new MainPageViewModel();
+            CurrentViewModel = new MainPageViewModel(new DefaultDialogService(), new FileService());
         }
     }
 }
