@@ -1,10 +1,6 @@
 ﻿using Kune.Models;
 using Kune.Service.Alhoritm;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kune.Service.ConvertData
@@ -20,12 +16,19 @@ namespace Kune.Service.ConvertData
             for (int i = 0; i < buff.Length; i++)
             {
                 graph.ribsList[i] = new List<int>();
+            }
 
+            for (int i = 0; i < buff.Length; i++)
+            {
                 string[] innnerbuff = buff[i].Split(" ");
 
-                for (int j = i; j < innnerbuff.Length; j++)
+                for (int j = 0; j < innnerbuff.Length; j++)
                 {
-                    int vertex = int.Parse(innnerbuff[j]);  // TODO: Валидация
+                    int vertex;
+                    if (int.TryParse(innnerbuff[j], out vertex) == false)
+                    {
+                        return null;
+                    }
                     if (vertex > 0)
                     {
                         graph.ribsList[i].Add(j);

@@ -10,7 +10,7 @@ namespace Kune.Service.ConvertData
 {
     class GetListService : IGetData
     {
-        public async Task<int[]> ConvertData(string input)  // TODO: Валидация (ввод не связной вершины)
+        public async Task<int[]?> ConvertData(string input)  // TODO: Валидация (ввод не связной вершины)
         {
             Graph graph = new Graph();
             graph.ribsList = new Dictionary<int, List<int>>();
@@ -19,9 +19,20 @@ namespace Kune.Service.ConvertData
 
             for (int i = 0; i < buff.Length - 1; i += 2)
             {
-                int first = int.Parse(buff[i]) - 1;
-                int second = int.Parse(buff[i + 1]) - 1;
+                int first;
+                if (int.TryParse(buff[i], out first) == false || first <= 0)
+                {
+                    return null;
+                }
 
+                int second;
+                if (int.TryParse(buff[i + 1], out second) == false || second <= 0)
+                {
+                    return null;
+                }
+
+                first--;
+                second--;
                 if (!graph.ribsList.ContainsKey(first))
                 {
                     graph.ribsList[first] = new List<int>();
@@ -34,7 +45,6 @@ namespace Kune.Service.ConvertData
                 graph.ribsList[first].Add(second);
                 graph.ribsList[second].Add(first);
 
-
                 if (first > second && first > graph.size)
                 {
                     graph.size = first;
@@ -45,7 +55,7 @@ namespace Kune.Service.ConvertData
                 }
             }
 
-            for (int i = 0; i < graph.size; i++)
+            for (int i = 0; i < graph.size + 1; i++)
             {
                 if (!graph.ribsList.ContainsKey(i))
                 {

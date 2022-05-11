@@ -27,7 +27,7 @@ namespace Kune.Service
                 {
                     if (result[i] >= 0)
                     {
-                        await writer.WriteLineAsync((result[i] + 1) + " " + (i + 1));
+                        await writer.WriteLineAsync((i + 1)+ " " + (result[i] + 1));
                     }
                 }
             }
