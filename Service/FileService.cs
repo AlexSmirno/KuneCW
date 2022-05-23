@@ -32,5 +32,24 @@ namespace Kune.Service
                 }
             }
         }
+
+        public async Task SaveWithRecord (string filename, int[] result, int maxPar, double time)
+        {
+            using (StreamWriter writer = new StreamWriter(filename, false))
+            {
+                await writer.WriteLineAsync("Отчет");
+                await writer.WriteLineAsync("Время работы алгоритма примерно = " + time*1000 + " милисекунд");
+                await writer.WriteLineAsync("Максимальное паросочетание: " + maxPar);
+                await writer.WriteLineAsync("Вариант паросочетания:");
+
+                for (int i = 0; i < result.Length; i++)
+                {
+                    if (result[i] >= 0)
+                    {
+                        await writer.WriteLineAsync((i + 1) + " " + (result[i] + 1));
+                    }
+                }
+            }
+        }
     }
 }

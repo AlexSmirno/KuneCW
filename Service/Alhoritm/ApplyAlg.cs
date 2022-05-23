@@ -30,7 +30,7 @@ namespace Kune.Service.Alhoritm
             }
         }
 
-        public async Task<int[]> Main() //Не воспринимает циклы
+        public async Task<int[]> Main()
         {
 
             for (int i = 0; i < _graph.size; i++)
@@ -64,14 +64,16 @@ namespace Kune.Service.Alhoritm
                     if ((ancestor[to] == -1) || await Kun(ancestor[to]))
                     {
                         ancestor[to] = currentVertex;
-                        if (log[log.Count - 1].chain == null)
+                        if (log[log.Count - 1].chain == null) // LOG
                         {
-                            log[log.Count - 1].chain = (to + 1) + " " + (currentVertex + 1);
+                            log[log.Count - 1].chain = (to + 1) + " " + (currentVertex + 1); // LOG
                         }
                         else
                         {
-                            log.Add(new AlgoLog() { cutV = currentVertex + 1 , iteraction = log[log.Count - 1].iteraction, nextV = to + 1, visited = log[log.Count - 1].visited} );
-                            log[log.Count - 1].chain = to + 1 + " " + (currentVertex + 1);
+                            log.Add(new AlgoLog() { cutV = currentVertex + 1 , 
+                                iteraction = log[log.Count - 1].iteraction, 
+                                nextV = to + 1, visited = log[log.Count - 1].visited} ); // LOG
+                            log[log.Count - 1].chain = to + 1 + " " + (currentVertex + 1); // LOG
                         }
                         return true;
                     }
@@ -81,7 +83,8 @@ namespace Kune.Service.Alhoritm
                 }
             }
 
-            log[log.Count - 1].visited = "already visited";
+            log[log.Count - 1].visited = "already visited"; // LOG
+
             return false;
 
         }

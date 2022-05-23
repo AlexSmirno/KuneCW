@@ -1,12 +1,11 @@
 ﻿using Kune.Commands;
-using Kune.Models;
 using Kune.Service;
 using Kune.Service.ConvertData;
 using Kune.Service.FilesDialogs;
 using System;
-using System.Windows;
 using System.Linq;
 using System.Windows.Input;
+using System.Diagnostics;
 
 namespace Kune.ViewModels
 {
@@ -14,6 +13,7 @@ namespace Kune.ViewModels
     {
         IDialogService dialogService;
         FileService fileService;
+        private Stopwatch Time = new Stopwatch();
 
         private string inputGraph;
         public string InputGraph
@@ -47,7 +47,7 @@ namespace Kune.ViewModels
             }
         }
 
-        private bool secondCheckbox = false;
+        private bool secondCheckbox = true;
         public bool SecondCheckbox
         {
             get
@@ -62,7 +62,35 @@ namespace Kune.ViewModels
             }
         }
 
-        private string briefResult;
+        private double algoTime;
+        public double AlgoTime
+        {
+            get
+            {
+                return algoTime;
+            }
+            set
+            {
+                algoTime = value;
+                OnPropertyChanged(nameof(AlgoTime));
+            }
+        }
+
+        private bool isFullRecord;
+        public bool IsFullRecord
+        {
+            get
+            {
+                return isFullRecord;
+            }
+            set
+            {
+                isFullRecord = value;
+                OnPropertyChanged(nameof(IsFullRecord));
+            }
+        }
+
+        private string briefResult = "Максимальное паросочетание: ";
         public string BriefResult {
             get
             {
@@ -70,7 +98,7 @@ namespace Kune.ViewModels
             }
             set
             {
-                briefResult = "Максимальное паросочетание " + value;
+                briefResult = "Максимальное паросочетание: " + value;
                 OnPropertyChanged(nameof(BriefResult));
             }
         }
@@ -88,13 +116,16 @@ namespace Kune.ViewModels
                 OnPropertyChanged(nameof(FullResult));
             }
         }
+
         private ICommand startAlgorithmCommand;
         public ICommand StartAlgorithmCommand
         {
             get
             {
                 if (startAlgorithmCommand == null)
-                { startAlgorithmCommand = new RelayCommand<object>(MyCommand_Execute); }
+                {
+                    startAlgorithmCommand = new RelayCommand<object>(MyCommand_Execute);
+                }
                 return startAlgorithmCommand;
             }
         }
@@ -102,12 +133,14 @@ namespace Kune.ViewModels
         private async void MyCommand_Execute(object parameter)
         {
             IGetData getData = new GetListService();
-
+            Time.Restart();
             if (FirstCheckbox) { getData = new GetMatrixService(); }
             if (SecondCheckbox) { getData = new GetListService(); }
-
+            Time.Stop();
+            AlgoTime = Time.Elapsed.TotalMilliseconds;
             FullResult = await getData.ConvertData(InputGraph);
-            BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
+            FullResult = FullResult.Where(item => item != -1).ToArray();
+            BriefResult = FullResult.Length.ToString();
         }
 
         private ICommand inputCommand;
@@ -130,12 +163,16 @@ namespace Kune.ViewModels
                     string input = await fileService.OpenAsync(dialogService.FilePath);
 
                     IGetData getData = new GetListService();
+
+                    Time.Restart();
                     if (FirstCheckbox) { getData = new GetMatrixService(); }
                     if (SecondCheckbox) { getData = new GetListService(); }
-                    FullResult = await getData.ConvertData(input);
+                    Time.Stop();
 
+                    AlgoTime = Time.Elapsed.TotalMilliseconds;
+                    FullResult = await getData.ConvertData(input);
                     FullResult = FullResult.Where(item => item != -1).ToArray();
-                    BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
+                    BriefResult = FullResult.Length.ToString();
 
                     await dialogService.ShowMessage("Файл открыт!");
                 }
@@ -163,7 +200,14 @@ namespace Kune.ViewModels
             {
                 if (dialogService.SaveFileDialog() == true)
                 {
-                    await fileService.Save(dialogService.FilePath, FullResult);
+                    if (IsFullRecord == true)
+                    {
+                        await fileService.SaveWithRecord(dialogService.FilePath, FullResult, int.Parse(BriefResult.Split()[2]), Time.Elapsed.TotalMilliseconds);
+                    }
+                    else
+                    {
+                        await fileService.Save(dialogService.FilePath, FullResult);
+                    }
 
                     await dialogService.ShowMessage("Файл сохранен!");
                 }
@@ -180,11 +224,6 @@ namespace Kune.ViewModels
         {
             this.dialogService = dialogService;
             this.fileService = fileService;
-        }
-
-        public int SelectedMode(bool[] checkboxArray)
-        {
-            return Array.IndexOf(checkboxArray, true) + 1; 
         }
     }
 }
