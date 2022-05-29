@@ -62,8 +62,8 @@ namespace Kune.ViewModels
             }
         }
 
-        private double algoTime;
-        public double AlgoTime
+        private string algoTime = "Время работы алгоритма: ";
+        public string AlgoTime
         {
             get
             {
@@ -71,7 +71,7 @@ namespace Kune.ViewModels
             }
             set
             {
-                algoTime = value;
+                algoTime = "Время работы алгоритма: " + value;
                 OnPropertyChanged(nameof(AlgoTime));
             }
         }
@@ -133,14 +133,21 @@ namespace Kune.ViewModels
         private async void MyCommand_Execute(object parameter)
         {
             IGetData getData = new GetListService();
-            Time.Restart();
-            if (FirstCheckbox) { getData = new GetMatrixService(); }
-            if (SecondCheckbox) { getData = new GetListService(); }
-            Time.Stop();
-            AlgoTime = Time.Elapsed.TotalMilliseconds;
-            FullResult = await getData.ConvertData(InputGraph);
-            FullResult = FullResult.Where(item => item != -1).ToArray();
-            BriefResult = FullResult.Length.ToString();
+            try
+            {
+                if (FirstCheckbox) { getData = new GetMatrixService(); }
+                if (SecondCheckbox) { getData = new GetListService(); }
+                Time.Restart();
+                FullResult = await getData.ConvertData(InputGraph);
+                Time.Stop();
+                AlgoTime = Time.Elapsed.TotalMilliseconds.ToString();
+                FullResult = FullResult.ToArray();
+                BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMessage(ex.Message);
+            }
         }
 
         private ICommand inputCommand;
@@ -163,13 +170,12 @@ namespace Kune.ViewModels
                     string input = await fileService.OpenAsync(dialogService.FilePath);
 
                     IGetData getData = new GetListService();
-
-                    Time.Restart();
                     if (FirstCheckbox) { getData = new GetMatrixService(); }
                     if (SecondCheckbox) { getData = new GetListService(); }
-                    Time.Stop();
 
-                    AlgoTime = Time.Elapsed.TotalMilliseconds;
+                    Time.Restart();
+                    AlgoTime = Time.Elapsed.TotalMilliseconds.ToString();
+                    Time.Stop();
                     FullResult = await getData.ConvertData(input);
                     FullResult = FullResult.Where(item => item != -1).ToArray();
                     BriefResult = FullResult.Length.ToString();

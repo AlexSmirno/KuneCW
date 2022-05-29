@@ -40,7 +40,8 @@ namespace Kune.Service.Alhoritm
                 await Kun(i);
             }
 
-            logging();
+            AlgoLogService algoLogService = new AlgoLogService(log);
+            algoLogService.Logging();
 
             return await Task.FromResult(ancestor);
         }
@@ -89,29 +90,5 @@ namespace Kune.Service.Alhoritm
 
         }
 
-        private async void logging()
-        {
-            using (StreamWriter writer = new StreamWriter("D:\\log.txt", false))
-            {
-                for (int i = 0; i < log.Count; i++)
-                {
-                    await writer.WriteLineAsync(i + " | " + log[i].ToString());
-                }
-            }
-        }
-
-        class AlgoLog
-        {
-            public int iteraction { get; set; }
-            public int cutV { get; set; }
-            public string visited { get; set; }
-            public int nextV { get; set; }
-            public string chain { get; set; }
-
-            public override string ToString()
-            {
-                return iteraction + " | " + cutV + " | " + visited + " | " + nextV + " | " + chain;
-            }
-        }
     }
 }

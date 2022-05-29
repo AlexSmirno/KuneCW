@@ -12,23 +12,32 @@ namespace Kune.Service.ConvertData
     {
         public async Task<int[]?> ConvertData(string input)  // TODO: Валидация (ввод не связной вершины)
         {
+            if (input == null)
+            {
+                throw new NullReferenceException("Возможно, вы не ввели граф");
+            }
             Graph graph = new Graph();
             graph.ribsList = new Dictionary<int, List<int>>();
 
             string[] buff = input.Replace("\r\n", " ").Split(" ");
+
+            if (buff.Length % 2 != 0)
+            {
+                throw new FormatException("Неверный формат для списка смежности");
+            }
 
             for (int i = 0; i < buff.Length - 1; i += 2)
             {
                 int first;
                 if (int.TryParse(buff[i], out first) == false || first <= 0)
                 {
-                    return null;
+                    throw new FormatException("Неверный формат для списка смежности");
                 }
 
                 int second;
                 if (int.TryParse(buff[i + 1], out second) == false || second <= 0)
                 {
-                    return null;
+                    throw new FormatException("Неверный формат для списка смежности");
                 }
 
                 first--;
@@ -37,14 +46,22 @@ namespace Kune.Service.ConvertData
                 {
                     graph.ribsList[first] = new List<int>();
                 }
-                if (!graph.ribsList.ContainsKey(second))
+
+                if (graph.ribsList.ContainsKey(second))
                 {
-                    graph.ribsList[second] = new List<int>();
+                    throw new FormatException("Возможно, одна из вершин находится в нескольких долях");
+                }
+
+                foreach (KeyValuePair<int, List<int>> riblist in graph.ribsList)
+                {
+                    if (riblist.Value.Contains(first))
+                    {
+                        throw new FormatException("Возможно, одна из вершин находится в нескольких долях");
+                    }
                 }
 
                 graph.ribsList[first].Add(second);
-                graph.ribsList[second].Add(first);
-
+                
                 if (first > second && first > graph.size)
                 {
                     graph.size = first;
