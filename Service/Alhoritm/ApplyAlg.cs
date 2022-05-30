@@ -1,4 +1,5 @@
 ﻿using Kune.Models;
+using Kune.Service.FilesWriteRead;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,12 +33,11 @@ namespace Kune.Service.Alhoritm
 
         public async Task<int[]> Main()
         {
-
-            for (int i = 0; i < _graph.size; i++)
+            foreach (KeyValuePair<int, List<int>> riblistForOne in _graph.ribsList)
             {
                 visited = new bool[_graph.size];
                 iteraction++;
-                await Kun(i);
+                await Kun(riblistForOne.Key);
             }
 
             AlgoLogService algoLogService = new AlgoLogService(log);

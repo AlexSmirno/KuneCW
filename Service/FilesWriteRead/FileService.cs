@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Kune.Service
+namespace Kune.Service.FilesWriteRead
 {
     class FileService
     {
@@ -38,7 +35,7 @@ namespace Kune.Service
             using (StreamWriter writer = new StreamWriter(filename, false))
             {
                 await writer.WriteLineAsync("Отчет");
-                await writer.WriteLineAsync("Время работы алгоритма примерно = " + time*1000 + " милисекунд");
+                await writer.WriteLineAsync("Время работы алгоритма примерно = " + time + " секунд");
                 await writer.WriteLineAsync("Максимальное паросочетание: " + maxPar);
                 await writer.WriteLineAsync("Вариант паросочетания:");
 

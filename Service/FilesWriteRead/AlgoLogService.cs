@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kune.Models;
 
-namespace Kune.Service
+namespace Kune.Service.FilesWriteRead
 {
     public class AlgoLogService
     {
@@ -19,10 +19,9 @@ namespace Kune.Service
 
         public async void Logging()
         {
-            using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write)))
+            using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.Append, FileAccess.Write)))
             {
-
-                await writer.WriteLineAsync($"Новая запись от " + DateTime.Now.ToString("yy/MM/dd/hh/mm/ss") );
+                await writer.WriteLineAsync($"Новая запись от " + DateTime.Now.ToString("yy/MM/dd") + " " + DateTime.Now.ToString("hh/mm/ss"));
                 for (int i = 0; i < _log.Count; i++)
                 {
                     //File.AppendText(i + ") " + _log[i].ToString());

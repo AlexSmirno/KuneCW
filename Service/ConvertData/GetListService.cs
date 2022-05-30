@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Kune.Models;
 using Kune.Service.Alhoritm;
@@ -10,7 +8,7 @@ namespace Kune.Service.ConvertData
 {
     class GetListService : IGetData
     {
-        public async Task<int[]?> ConvertData(string input)  // TODO: Валидация (ввод не связной вершины)
+        public async Task<int[]?> ConvertData(string input)
         {
             if (input == null)
             {
@@ -72,13 +70,6 @@ namespace Kune.Service.ConvertData
                 }
             }
 
-            for (int i = 0; i < graph.size + 1; i++)
-            {
-                if (!graph.ribsList.ContainsKey(i))
-                {
-                    graph.ribsList[i] = new List<int>();
-                }
-            }
             graph.size++;
 
             ApplyAlg applyAlg = new ApplyAlg(graph);

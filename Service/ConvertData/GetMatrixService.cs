@@ -28,7 +28,7 @@ namespace Kune.Service.ConvertData
                 string[] innnerbuff = buff[i].Split(" ");
                 if (buff.Length != innnerbuff.Length)
                 {
-                    throw new FormatException("Неверный формат для списка смежности");
+                    throw new FormatException("Неверный формат для матрицы смежности");
                 }
                 for (int j = 0; j < innnerbuff.Length; j++)
                 {
@@ -44,6 +44,12 @@ namespace Kune.Service.ConvertData
                     }
                 }
             }
+
+            for (int i = 0; i < buff.Length; i++)
+            {
+
+            }
+
             graph.size = buff.Length;
             ApplyAlg applyAlg = new ApplyAlg(graph);
 

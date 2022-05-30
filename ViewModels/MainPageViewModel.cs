@@ -1,11 +1,12 @@
 ﻿using Kune.Commands;
-using Kune.Service;
 using Kune.Service.ConvertData;
 using Kune.Service.FilesDialogs;
+using Kune.Service.FilesWriteRead;
 using System;
 using System.Linq;
 using System.Windows.Input;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Kune.ViewModels
 {
@@ -140,7 +141,7 @@ namespace Kune.ViewModels
                 Time.Restart();
                 FullResult = await getData.ConvertData(InputGraph);
                 Time.Stop();
-                AlgoTime = Time.Elapsed.TotalMilliseconds.ToString();
+                AlgoTime = (Time.Elapsed.TotalMilliseconds/1000).ToString();
                 FullResult = FullResult.ToArray();
                 BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
             }
@@ -174,11 +175,12 @@ namespace Kune.ViewModels
                     if (SecondCheckbox) { getData = new GetListService(); }
 
                     Time.Restart();
-                    AlgoTime = Time.Elapsed.TotalMilliseconds.ToString();
-                    Time.Stop();
                     FullResult = await getData.ConvertData(input);
-                    FullResult = FullResult.Where(item => item != -1).ToArray();
-                    BriefResult = FullResult.Length.ToString();
+                    Time.Stop();
+
+                    AlgoTime = (Time.Elapsed.TotalMilliseconds / 1000).ToString();
+                    FullResult = FullResult.ToArray();
+                    BriefResult = FullResult.Where(item => item != -1).ToArray().Length.ToString();
 
                     await dialogService.ShowMessage("Файл открыт!");
                 }
@@ -208,7 +210,7 @@ namespace Kune.ViewModels
                 {
                     if (IsFullRecord == true)
                     {
-                        await fileService.SaveWithRecord(dialogService.FilePath, FullResult, int.Parse(BriefResult.Split()[2]), Time.Elapsed.TotalMilliseconds);
+                        await fileService.SaveWithRecord(dialogService.FilePath, FullResult, int.Parse(BriefResult.Split()[2]), double.Parse(AlgoTime.Split()[3]));
                     }
                     else
                     {
