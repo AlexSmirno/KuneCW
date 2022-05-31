@@ -45,11 +45,6 @@ namespace Kune.Service.ConvertData
                 }
             }
 
-            for (int i = 0; i < buff.Length; i++)
-            {
-
-            }
-
             graph.size = buff.Length;
             ApplyAlg applyAlg = new ApplyAlg(graph);
 

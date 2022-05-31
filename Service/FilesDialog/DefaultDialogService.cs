@@ -12,7 +12,7 @@ namespace Kune.Service.FilesDialogs
         public bool OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-
+            openFileDialog.Filter = "txt files (*.txt)|*.txt";
             if (openFileDialog.ShowDialog() == true)
             {
                 FilePath = openFileDialog.FileName;
