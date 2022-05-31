@@ -16,6 +16,11 @@ namespace Kune.Service.FilesDialogs
             if (openFileDialog.ShowDialog() == true)
             {
                 FilePath = openFileDialog.FileName;
+                if (FilePath.Split('.')[1] != "txt")
+                {
+                    FilePath = "";
+                    throw new FormatException("Неверный тип файл");
+                }
                 return true;
             }
 
